@@ -36,16 +36,13 @@ if not exist "node_modules" (
     echo.
 )
 
-:: Install EAS CLI globally if not installed
-where eas >nul 2>nul
+:: Install eas-cli locally as dev dependency
+echo [INFO] Installing EAS CLI locally...
+call npm install --save-dev eas-cli
 if %errorlevel% neq 0 (
-    echo [INFO] Installing EAS CLI...
-    call npm install -g eas-cli
-    if %errorlevel% neq 0 (
-        echo [ERROR] Failed to install EAS CLI!
-        pause
-        exit /b 1
-    )
+    echo [ERROR] Failed to install EAS CLI!
+    pause
+    exit /b 1
 )
 
 echo [OK] EAS CLI ready
@@ -62,11 +59,11 @@ echo If you don't have an account, one will be created during the process.
 echo.
 
 :: Check if user is logged in
-eas whoami >nul 2>nul
+call npx eas whoami >nul 2>nul
 if %errorlevel% neq 0 (
     echo [INFO] Please log in to your Expo account:
     echo.
-    call eas login
+    call npx eas login
     if %errorlevel% neq 0 (
         echo [ERROR] Login failed!
         pause
@@ -83,7 +80,7 @@ echo Starting APK build...
 echo This may take 10-20 minutes. The APK will be built in the cloud.
 echo.
 
-call eas build --platform android --profile preview --non-interactive
+call npx eas build --platform android --profile preview
 
 if %errorlevel% neq 0 (
     echo.
